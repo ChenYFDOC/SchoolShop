@@ -1,0 +1,131 @@
+{% extends '..\commons\base.html' %}
+{% block title %}
+枫云校园商铺-登录
+{% end %}
+{% block css %}
+<style>
+    html, body {
+        height: 100%;
+    }
+
+    #background-log {
+        height: 100%;
+    }
+</style>
+{% end %}
+{% block body %}
+<div id="background-log" class="jumbotron">
+    <div class="container">
+        <div class="row justify-content-end">
+            <div class="col-4" style="background-color: burlywood;padding-left: 0;padding-right: 0;">
+                <ul class="nav nav-pills nav-fill" role="tablist" style="background-color: khaki">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" data-toggle="pill" id="sign-tab" href="#signin"
+                           aria-controls="signin"
+                           aria-selected="true" role="tab"
+                           href="javascript:">登录</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="pill" id="regist-tab" href="#regist" aria-controls="regist"
+                           aria-selected="false" role="tab"
+                           href="javascript:">注册</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="sign-tab">
+                        <form style="padding: 40px 30px 50px;">
+                            <div class="form-group">
+                                <label for="phone">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor"
+                                         class="bi bi-phone-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                    </svg>
+                                </label>
+                                <input style="width: 87%;float: right" type="tel" name="phone" class="form-control"
+                                       id="phone" placeholder="请输入手机号"
+                                       aria-describedby="emailHelp">
+                                <!--            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="passwd">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor"
+                                         class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+                                        <path fill-rule="evenodd"
+                                              d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+                                    </svg>
+                                </label>
+                                <input style="width: 87%;float: right" placeholder="请输入密码" type="password" name="passwd"
+                                       class="form-control"
+                                       id="passwd">
+                            </div>
+                            <div class="form-group">
+                                <img id="coder" style="float: left;width: 140px;height: 35px"
+                                     src="pic_code/" title="切换验证码">
+                                <input style="width: 54%;float: right" type="text" class="form-control" id="message"
+                                       placeholder="验证码">
+                            </div>
+                            <div style="margin-top: 70px" class="form-group form-check">
+                                <input type="checkbox" name="remember" class="form-check-input" id="remember">
+                                <label class="form-check-label" for="remember">7天内免登录</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">登录</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane" id="regist" role="tabpanel" aria-labelledby="regist-tab">
+                        <form style="padding: 40px 30px 50px;">
+                            <div class="form-group">
+                                <label for="phone">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor"
+                                         class="bi bi-phone-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                    </svg>
+                                </label>
+                                <input style="width: 87%;float: right" type="tel" name="phone" class="form-control"
+                                       placeholder="请输入手机号"
+                                       aria-describedby="emailHelp">
+                                <!--            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="message">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
+                                         class="bi bi-file-person-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm-1 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm-3 4c2.623 0 4.146.826 5 1.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1.245C3.854 11.825 5.377 11 8 11z"/>
+                                    </svg>
+                                </label>
+                                <button style="float: right" type="button" class="btn btn-secondary mb-1">获取验证码</button>
+                                <input style="width: 54%;float: right" type="text" class="form-control" id="message"
+                                       placeholder="验证码">
+                            </div>
+                            <div class="form-group">
+                                <label for="passwd">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor"
+                                         class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+                                        <path fill-rule="evenodd"
+                                              d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+                                    </svg>
+                                </label>
+                                <input placeholder="请输入密码" style="width: 87%;float: right" type="password" name="passwd"
+                                       class="form-control" id="passwd">
+                            </div>
+                            <button type="submit" class="btn btn-primary">注册</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% end %}
+{% block js %}
+<script>
+    let coder = $('#coder');
+    coder.on('click', (e) => {
+        coder.attr('src', coder.attr('src') + '?')
+    })
+</script>
+{% end %}
