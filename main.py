@@ -3,7 +3,8 @@ from settings import settings
 from urls import url_match
 
 if __name__ == '__main__':
-    web.Application([
+    app = web.Application([
         *url_match,
-    ], **settings).listen(8080)
+    ], **settings)
+    app.listen(8080)
     ioloop.IOLoop.current().start()

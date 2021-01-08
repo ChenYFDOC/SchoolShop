@@ -42,10 +42,9 @@
                                               d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
                                     </svg>
                                 </label>
-                                <input style="width: 87%;float: right" type="tel" name="phone" class="form-control"
-                                       id="phone" placeholder="请输入手机号"
-                                       aria-describedby="emailHelp">
-                                <!--            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                <input style="width: 87%;float: right" type="tel" name="phone"
+                                       class="form-control"
+                                       id="phone" placeholder="请输入手机号">
                             </div>
                             <div class="form-group">
                                 <label for="passwd">
@@ -61,21 +60,21 @@
                                        id="passwd">
                             </div>
                             <div class="form-group">
-                                <img id="coder" style="float: left;width: 140px;height: 35px"
-                                     src="pic_code/" title="切换验证码">
-                                <input style="width: 54%;float: right" type="text" class="form-control" id="message"
+                                <img class="coder" style="float: left;width: 140px;height: 35px"
+                                     src="{{ reverse_url('pic_code',1) }}" title="切换验证码">
+                                <input style="width: 56%;float: right" type="text" class="form-control" id="pic_message"
                                        placeholder="验证码">
                             </div>
                             <div style="margin-top: 70px" class="form-group form-check">
                                 <input type="checkbox" name="remember" class="form-check-input" id="remember">
                                 <label class="form-check-label" for="remember">7天内免登录</label>
                             </div>
-                            <button type="submit" class="btn btn-primary">登录</button>
+                            <button style="width: 100%" type="submit" class="btn btn-primary">登录</button>
                         </form>
                     </div>
                     <div class="tab-pane" id="regist" role="tabpanel" aria-labelledby="regist-tab">
                         <form style="padding: 40px 30px 50px;">
-                            <div class="form-group">
+                            <div id="tel" class="form-group">
                                 <label for="phone">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor"
                                          class="bi bi-phone-fill" viewBox="0 0 16 16">
@@ -83,22 +82,23 @@
                                               d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
                                     </svg>
                                 </label>
-                                <input style="width: 87%;float: right" type="tel" name="phone" class="form-control"
-                                       placeholder="请输入手机号"
-                                       aria-describedby="emailHelp">
-                                <!--            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                <input id="reg-tel" style="width: 87%;float: right" type="tel" name="phone"
+                                       class="form-control"
+                                       placeholder="请输入手机号">
                             </div>
-                            <div class="form-group">
-                                <label for="message">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
-                                         class="bi bi-file-person-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                              d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm-1 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm-3 4c2.623 0 4.146.826 5 1.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1.245C3.854 11.825 5.377 11 8 11z"/>
-                                    </svg>
-                                </label>
-                                <button style="float: right" type="button" class="btn btn-secondary mb-1">获取验证码</button>
-                                <input style="width: 54%;float: right" type="text" class="form-control" id="message"
+                            <div class="form-group" style="overflow: hidden">
+                                <img class="coder" style="float: left;width: 140px;height: 35px"
+                                     src="{{ reverse_url('pic_code',2) }}" title="切换验证码">
+                                <input style="width: 56%;float: right" type="text" class="form-control" id="regst-code"
                                        placeholder="验证码">
+                            </div>
+                            <div class="form-group" style="overflow:hidden;">
+                                <button id="get-code" style="float: right" type="button" class="btn btn-secondary mb-1">
+                                    获取验证码
+                                </button>
+                                <input style="width: 54%;float: right" type="text" class="form-control"
+                                       id="phone_message"
+                                       placeholder="短信验证码">
                             </div>
                             <div class="form-group">
                                 <label for="passwd">
@@ -112,7 +112,19 @@
                                 <input placeholder="请输入密码" style="width: 87%;float: right" type="password" name="passwd"
                                        class="form-control" id="passwd">
                             </div>
-                            <button type="submit" class="btn btn-primary">注册</button>
+                            <div class="form-group">
+                                <label for="school">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" fill="currentColor"
+                                         class="bi bi-book-half" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M8.5 2.687v9.746c.935-.53 2.12-.603 3.213-.493 1.18.12 2.37.461 3.287.811V2.828c-.885-.37-2.154-.769-3.388-.893-1.33-.134-2.458.063-3.112.752zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
+                                    </svg>
+                                </label>
+                                <input placeholder="请输入大学名称" style="width: 87%;float: right" type="text" name="school"
+                                       class="form-control" id="school">
+                            </div>
+                            <button onclick="post_reg()" style="width: 100%" type="button" class="btn btn-primary">注册
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -122,10 +134,93 @@
 </div>
 {% end %}
 {% block js %}
+<script src="{{ static_url('js/jquery-3.5.1.min.js') }}"></script>
 <script>
-    let coder = $('#coder');
-    coder.on('click', (e) => {
-        coder.attr('src', coder.attr('src') + '?')
+    $('.coder').on('click', function () {
+        coder = $(this);
+        coder.attr('src', coder.attr('src') + Math.ceil(Math.random() * 1000));
     })
+    let get_coder = $('#get-code')
+    get_coder.attr('disabled', true)
+    let reg_coder = $('#regst-code')
+    let reg_tel = $('#reg-tel')
+    let tel = $('#tel')
+    let reg_passwd = $('#passwd')
+    let phone_message = $('#phone_message')
+    let college = $('#school')
+    reg_coder.on('input', function () {
+        if ($(this).val().length === 5) {
+            get_coder.prop('disabled', false)
+        } else
+            get_coder.prop('disabled', true)
+    })
+    reg_tel.on('input', (e) => {
+        reg_tel.removeClass('is-invalid')
+    })
+    let response = (which, res) => {
+        which.removeClass('is-valid')
+        which.removeClass('is-invalid')
+        which.addClass('is-invalid')
+        which.parent().append(`<div class="invalid-feedback">${res}</div>`)
+    }
+    get_coder.on('click', () => {
+        if (!get_coder.prop('disabled')) {
+            $.get("{{ reverse_url('phone_message') }}", {
+                phone: reg_tel.val(),
+                pic_code: reg_coder.val()
+            }, (result) => {
+                if (result.status === 403) {
+                    response(reg_tel, '手机号已注册！')
+                }
+                if (result.status === 402) {
+                    response(reg_tel, '请输入有效的手机号！')
+                }
+                if (result.status === 401) {
+                    response(reg_coder, '验证码错误！')
+                }
+                if (result.status === 200) {
+                    reg_coder.removeClass('is-valid')
+                    reg_coder.removeClass('is-invalid')
+                    reg_coder.addClass('is-valid')
+                    get_coder.prop('disabled', true)
+                    let seconds = 60
+                    let interval = setInterval(() => {
+                        if (seconds-- !== 0) {
+                            get_coder.text(seconds)
+                        } else {
+                            get_coder.text('获取验证码')
+                            get_coder.prop('disabled', false)
+                            seconds = 60
+                            clearInterval(interval)
+                        }
+                    }, 1000)
+                }
+            })
+        }
+    })
+    let post_reg = () => {
+        phone_num = reg_tel.val()
+        password = reg_passwd.val()
+        phone_code = phone_message.val()
+        school = college.val()
+        $.post("{{ reverse_url('regist') }}", {
+            phone: phone_num,
+            password: password,
+            phone_code: phone_code,
+            college: school
+        }, (result) => {
+            if (result.status === 200) {
+
+            } else {
+                if (result.reason['phone_code']) {
+                    phone_message.parent().append(`<div class="invalid-feedback">${result.reason['phone_code']}</div>`)
+                } else if (result.reason['password']) {
+                    reg_passwd.parent().append(`<div class="invalid-feedback">${result.reason['password']}</div>`)
+                } else if (result.reason['college']) {
+                    college.parent().append(`<div class="invalid-feedback">${result.reason['college']}</div>`)
+                }
+            }
+        })
+    }
 </script>
 {% end %}

@@ -1,17 +1,9 @@
 from .handlers import *
-from settings import settings
-from tornado import ioloop
-from utils.genCodePic import ValidCodeImg
-import aioredis
+from tornado.web import url
 
-
-async def get_redis():
-    redis = await aioredis.create_redis_pool('redis://' + settings['redis']['host'] + f':{settings["redis"]["port"]}')
-    return redis
-
-
-redis = ioloop.IOLoop.current().run_sync(func=get_redis)
 url_match = [
-    (r'/login/', LoginHandler),
-    (r'/login/pic_code/', PicCode, {'redis': redis, 'coder': ValidCodeImg()})
+    url(r'/login/?', LoginHandler),
+    url(r'/login/pic_code/(\d*)/?', PicCode, name='pic_code'),
+    url(r'/regist/?', RegistHandler, name='regist'),
+    url(r'/regist/phone_message/?', MessageHandler, name='phone_message')
 ]

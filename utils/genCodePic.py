@@ -32,13 +32,13 @@ class ValidCodeImg:
 
         draw = ImageDraw.Draw(image)
 
-        font = ImageFont.truetype("GIGI.TTF", size=self.font_size)
+        font = ImageFont.truetype("BRADHITC.TTF", size=self.font_size)
 
         valid_str = ''
         for i in range(self.code_count):
             random_char = self.getRandomStr()
 
-            draw.text((10 + i * 30, -2), random_char, self.getRandomColor(), font=font)
+            draw.text((10 + i * 25, -2), random_char, self.getRandomColor(), font=font)
 
             valid_str += random_char
 
