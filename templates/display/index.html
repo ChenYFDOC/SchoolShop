@@ -1,4 +1,40 @@
 {% extends '..\commons\base.html' %}
 {% block body %}
-asdasd
-{% endblock %}
+<div style="height: 100%" class="container-lg">
+    <div style="height: 40%" class="row justify-content-center align-content-center">
+        <div class="col-5">
+            <img style="width: 100%;border-radius: 15%" src="{{ static_url('img/index_pic.jpg') }}">
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="input-group col-9">
+            <input id="input-search" type="text" class="form-control shadow">
+            <div class="input-group-append">
+                <span class="input-group-text btn btn-danger" id="search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" fill="currentColor"
+                         class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% end %}
+{% block js %}
+<script>
+    let inuput_search = $('#input-search');
+    let search = $('#search');
+    inuput_search.keydown((e) => {
+        if (e.keyCode === 13) {
+            search.click()
+        }
+    })
+    search.on('click', () => {
+        $.post('', {search: inuput_search.val()}, (res) => {
+
+        })
+    })
+    set_hot(inuput_search)
+</script>
+{% end %}

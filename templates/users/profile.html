@@ -1,0 +1,42 @@
+{% extends '..\commons\base.html' %}
+{% block head_js %}
+<script src="{{ static_url('js/sweetalert.min.js') }}"></script>
+{% end %}
+{% block css %}
+<style>
+    #list-tab a {
+        background-color: #cccccc;
+    }
+</style>
+{% end %}
+{% block body %}
+<div class="container-fluid" style="height: 100%">
+    <div style="height: 100%" class="row">
+        <div style="height: 100%;background-color: #cccccc" class="col-2">
+            <div style="padding-top: 120px;" class="list-group list-group-flush" id="list-tab" role="tablist">
+                <a class="list-group-item list-group-item-action" id="list-cart-list" data-toggle="list"
+                   href="#list-cart" role="tab">我的购物车</a>
+                <a class="list-group-item list-group-item-action" id="list-record-list" data-toggle="list"
+                   href="#list-record" role="tab">购买记录</a>
+                <a class="list-group-item list-group-item-action" id="list-pub-list" data-toggle="list"
+                   href="#list-pub" role="tab">我的发布</a>
+                <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
+                   href="#list-profile" role="tab">个人资料</a>
+            </div>
+        </div>
+        <div style="height: 100%;padding-top: 56px" class="tab-content col-10" id="nav-tabContent">
+            {#            添加 show active用来显示选中#}
+            <div class="tab-pane fade" id="list-cart" role="tabpanel" aria-labelledby="list-cart-list">
+
+            </div>
+            <div class="tab-pane fade" id="list-record" role="tabpanel" aria-labelledby="list-record-list">
+            </div>
+            <div class="tab-pane fade" id="list-pub" role="tabpanel" aria-labelledby="list-pub-list">
+            </div>
+            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                {% include 'user_info.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% end %}

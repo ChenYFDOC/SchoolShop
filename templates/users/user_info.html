@@ -1,0 +1,155 @@
+<style>
+    .list-group-item img {
+        border-radius: 20%;
+        width: 150px;
+        height: 150px;
+        transition: background-color 1s linear, color 1s linear;
+    }
+
+    .list-group-item img:hover {
+        cursor: pointer;
+        background-color: #ff3d67;
+        color: blue;
+    }
+</style>
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">
+        <div class="media">
+            <img title="点击编辑头像" src="{% if user_info.header %}
+            {{ reverse_url('media','header/'+user_info.header) }}
+            {% else %}
+            {{ reverse_url('media','header/default_header.jpg') }}
+            {% end %}"
+                 alt="" class="img-thumbnail shadow mr-3">
+            <div class="media-body">
+                <h5 class="mt-5">您好！{{ user_info.nick_name if user_info.nick_name else '' }}</h5>
+            </div>
+        </div>
+    </li>
+    <li class="list-group-item">
+        <label for="phone">手机：</label>
+        <input value="******{{ user_info.phone[7:] if user_info.phone else '' }}" disabled id="phone" name="phone"
+               type="text">
+        <a id="change-log" href="#" data-toggle="modal" data-target="#log-changer">修改登录信息</a>
+    </li>
+    <li class="list-group-item">
+        <label for="nick_name">昵称：</label>
+        <input value="{{ user_info.nick_name if user_info.nick_name else '' }}" id="nick_name" name="nick_name"
+               type="text">
+    </li>
+    <li class="list-group-item">
+        <label for="email">邮箱：</label>
+        <input value="{{ user_info.email if user_info.email else '' }}" id="email" name="email" type="email">
+    </li>
+    <li class="list-group-item">
+        <label for="trading_address">交易地址：</label>
+        <textarea name="trading_address" id="trading_address" cols="40"
+                  rows="2">{{ user_info.trading_address if user_info.trading_address else '' }}</textarea>
+    </li>
+</ul>
+<button type="button" class="btn btn-danger">保存</button>
+<div class="modal fade" id="log-changer" tabindex="-1" role="dialog" aria-labelledby="change-title"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="change-title">修改登录</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">原手机</span>
+                            </div>
+                            <input name="o_phone" type="text" class="form-control" aria-label="Username"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2">原密码</span>
+                            </div>
+                            <input name="o_password" type="password" class="form-control" aria-label="password"
+                                   aria-describedby="basic-addon2">
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">新手机</span>
+                            </div>
+                            <input name="n_phone" type="text" class="form-control" aria-label="Username"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2">新密码</span>
+                            </div>
+                            <input name="n_password" type="password" class="form-control" aria-label="password"
+                                   aria-describedby="basic-addon2">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2">确认密码</span>
+                            </div>
+                            <input name="r_password" type="password" class="form-control" aria-label="password"
+                                   aria-describedby="basic-addon2">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="save-change" type="button" class="btn btn-danger">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let log_changer = $('#change-log')
+    let change_modal = $('#log-changer')
+    change_modal.find('#save-change').on('click', () => {
+        let form = new FormData()
+        for (value of change_modal.find('input')) {
+            form.append(value.name, value.value)
+        }
+        $.ajax({
+            contentType: false,
+            processData: false,
+            url: '',
+            type: 'PATCH',
+            data: form,
+            success: (res) => {
+                if (res.status === 200)
+                    swal({
+                        text: "修改成功，请重新登陆",
+                        icon: "success",
+                        button: "确定",
+                    }).then(() => {
+                        location.href = '{{ reverse_url("login") }}'
+                    })
+                else if (res.status === 403)
+                    swal({
+                        text: "验证失败，请重新登陆",
+                        icon: "error",
+                        button: "确定",
+                    }).then(() => {
+                        location.href = '{{ reverse_url("login") }}'
+                    })
+                else {
+                    swal({
+                        text: "账号密码不符合要求！",
+                        icon: "error",
+                        button: "确定",
+                    })
+                }
+            }
+        })
+    })
+    change_modal.on('hidden.bs.modal', () => {
+        change_modal.find('input').val('')
+    })
+</script>
