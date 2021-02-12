@@ -15,12 +15,13 @@
 <ul class="list-group list-group-flush">
     <li class="list-group-item">
         <div class="media">
-            <img title="点击编辑头像" src="{% if user_info.header %}
-            {{ reverse_url('media','header/'+user_info.header) }}
+            <img id="change_header" title="点击编辑头像" src="{% if user_info.header %}
+            {{ reverse_url('media','header/'+user_info.header)+'?'+str(random.randint(0,100)) }}
             {% else %}
             {{ reverse_url('media','header/default_header.jpg') }}
             {% end %}"
                  alt="" class="img-thumbnail shadow mr-3">
+            <input id="header_file" type="file" hidden accept="image/*">
             <div class="media-body">
                 <h5 class="mt-5">您好！{{ user_info.nick_name if user_info.nick_name else '' }}</h5>
             </div>
@@ -47,7 +48,7 @@
                   rows="2">{{ user_info.trading_address if user_info.trading_address else '' }}</textarea>
     </li>
 </ul>
-<button type="button" class="btn btn-danger">保存</button>
+<button onclick="save()" type="button" class="btn btn-danger">保存</button>
 <div class="modal fade" id="log-changer" tabindex="-1" role="dialog" aria-labelledby="change-title"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -151,5 +152,69 @@
     })
     change_modal.on('hidden.bs.modal', () => {
         change_modal.find('input').val('')
+    })
+</script>
+<script>
+    let save = () => {
+        let nick_name = $('#nick_name')
+        let email = $('#email')
+        let trading_address = $('#trading_address')
+        $.ajax('', {
+            type: 'POST',
+            data: {
+                nick_name: nick_name.val(),
+                email: email.val(),
+                trading_address: trading_address.val()
+            },
+            success: ((res) => {
+                if (res.status === 200)
+                    swal({
+                        text: "修改成功",
+                        icon: "success",
+                        button: "确定",
+                    })
+                else
+                    swal({
+                        text: res.reason,
+                        icon: "error",
+                        button: "确定",
+                    })
+            })
+        })
+    }
+</script>
+<script>
+    let image_input = $('#header_file')
+    let change_header = $('#change_header')
+    change_header.on('click', () => {
+        image_input.click()
+    })
+    image_input.on('input', () => {
+        if (image_input.val() === '')
+            return
+        let img_url = (URL ? URL : webkitURL).createObjectURL(image_input[0].files[0])
+        change_header.attr('src', img_url)
+        let pic_form = new FormData()
+        pic_form.append('header_pic', image_input[0].files[0])
+        $.ajax('', {
+            type: 'post',
+            data: pic_form,
+            contentType: false,
+            processData: false,
+            success: (res) => {
+                if (res.status === 200) {
+                    swal({
+                        text: "修改成功",
+                        icon: "success",
+                        button: "确定",
+                    })
+                } else
+                    swal({
+                        text: "修改失败",
+                        icon: "error",
+                        button: "确定",
+                    })
+            }
+        })
     })
 </script>

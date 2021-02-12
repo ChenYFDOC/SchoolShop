@@ -3,6 +3,7 @@ import random
 import re
 import hashlib
 import jwt
+import aiofiles
 from tornado import web
 from servers import coder, redis, objects
 from .models import *
@@ -46,6 +47,12 @@ class LoginHandler(HotsHandler):
             for field in logform.errors:
                 reason[field] = logform.errors[field][0]
             return await self.finish({'status': 400, 'reason': reason})
+
+
+class LogoutHandler(web.RequestHandler):
+    async def get(self):
+        self.clear_cookie('jwt')
+        self.redirect(self.reverse_url('login'))
 
 
 class RegistHandler(web.RequestHandler):
@@ -122,10 +129,23 @@ class ProfileHandler(HotsHandler):
 
     @auth_decorator
     async def get(self):
-        await self.render(r'users/profile.html', user_info=self.user, hots=await self.get_hots(redis))
+        goods = await objects.execute(self.user.goods_set)
+        goods_ing = []
+        goods_end = []
+        for good in goods:
+            if good.status == 1:
+                goods_ing.append(good)
+            if good.status in (2, 3):
+                goods_end.append(good)
+        return await self.render(r'users/profile.html', user_info=self.user, hots=await self.get_hots(redis),
+                                 goods=goods, goods_ing=goods_ing, goods_end=goods_end)
 
     @auth_decorator
     async def patch(self):
+        """
+        修改账号密码的接口
+        :return:
+        """
         change_form = ChangeInfo(self.request.arguments)
         if change_form.validate():
             try:
@@ -145,3 +165,34 @@ class ProfileHandler(HotsHandler):
             for field in change_form.errors:
                 reason[field] = change_form.errors[field][0]
             return await self.finish({'status': 401, 'reason': reason})
+
+    @auth_decorator
+    async def post(self):
+        """
+        修改非正式信息的接口
+        :return:
+        """
+        if files := self.request.files:
+            file = files['header_pic'][0]
+            if not file['content_type'].startswith('image'):
+                return await self.finish({'status': 403})
+            if o_header := self.user.header:
+                file_name = o_header
+            else:
+                file_name = hashlib.md5((name_list := file['filename'].split('.'))[0].encode()).hexdigest() + '.' + \
+                            name_list[1]
+            async with aiofiles.open(settings['media_path'] + 'header/' + file_name, mode='wb') as f:
+                await f.write(file.body)
+            self.user.header = file_name
+            await objects.update(self.user, only=('header',))
+            return await self.finish({'status': 200})
+        # 上面代码是修改头像用的
+        info_form = ChangeInformality(self.request.arguments)
+        if info_form.validate():
+            self.user.nick_name = info_form.nick_name.data
+            self.user.email = info_form.email.data
+            self.user.trading_address = info_form.trading_address.data
+            await objects.update(self.user, only=('nick_name', 'email', 'trading_address'))
+            return await self.finish({'status': 200})
+        else:
+            return await self.finish({'status': 400, 'reason': info_form.errors.popitem()[1][0]})

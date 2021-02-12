@@ -12,15 +12,16 @@
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
             crossorigin="anonymous"></script>
     <title>{% block title %}{% end %}</title>
-    <style>
-        html, body {
-            height: 100%;
-        }
-    </style>
     {% block head_js %}
     {% end %}
-    {% block css %}{% end %}
 </head>
+<style>
+    html, body {
+        height: 100%;
+    }
+</style>
+{% block css %}
+{% end %}
 <body>
 {% include 'navbar.html' %}
 {% block body %}

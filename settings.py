@@ -2,8 +2,8 @@ import os
 
 settings = {
     "template_path": "templates",
-    "static_path": os.path.join(os.path.dirname(__file__), "static"),
-    "media_path": os.path.join(os.path.dirname(__file__), "media"),
+    "static_path": os.path.join(os.path.dirname(__file__), "static/"),
+    "media_path": os.path.join(os.path.dirname(__file__), "media/"),
     "cookie_secret": "rDTzO1yDRNwtOpyU",
     "login_url": "/login/?",
     # "xsrf_cookies": True,

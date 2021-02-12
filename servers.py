@@ -7,13 +7,11 @@ from settings import settings
 from elasticsearch import AsyncElasticsearch
 from functools import partial
 
-# async def get_redis():
-#     redis = await aioredis.create_redis_pool('redis://' + settings['redis']['host'] + f':{settings["redis"]["port"]}')
-#     return redis
-
-
+'''
+创建各式微服务
+'''
 es = AsyncElasticsearch(hosts=settings['es']['host'])
-db = peewee_async.MySQLDatabase(**settings['mysql'])
+db = peewee_async.PooledMySQLDatabase(**settings['mysql'])
 wtforms_json.init()
 db.set_allow_sync(False)
 objects = peewee_async.Manager(db)

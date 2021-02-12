@@ -1,7 +1,10 @@
 {% extends '..\commons\base.html' %}
+{% block css %}
+<link rel="stylesheet" href="{{ static_url('css/jquery-ui.min.css') }}">
+{% end %}
 {% block body %}
 <div style="height: 100%" class="container-lg">
-    <div style="height: 40%" class="row justify-content-center align-content-center">
+    <div style="height: 40%" class="mt-5 row justify-content-center align-content-center">
         <div class="col-5">
             <img style="width: 100%;border-radius: 15%" src="{{ static_url('img/index_pic.jpg') }}">
         </div>
@@ -31,10 +34,20 @@
         }
     })
     search.on('click', () => {
-        $.post('', {search: inuput_search.val()}, (res) => {
-
-        })
+        search_post(inuput_search.val())
     })
     set_hot(inuput_search)
+    inuput_search.on('input', function () {
+        $.post('{{ reverse_url("search") }}', {
+            "text": inuput_search.val(),
+            'index': 'goods',
+            'suggest': 'suggest'
+        }, (data) => {
+            inuput_search.autocomplete({
+                source: data.result,
+            })
+        })
+    })
+    inuput_search.autocomplete()
 </script>
 {% end %}

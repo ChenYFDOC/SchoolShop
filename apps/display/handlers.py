@@ -1,23 +1,67 @@
 import json
 
 from tornado import web
-from servers import es, redis
+from servers import es, redis, objects
 from utils.authLog import auth_decorator
 from common_handler import HotsHandler
+from ..shop.models import Goods
 
 
 class IndexHandler(HotsHandler):
-    @auth_decorator
-    async def get(self):
-        return await self.render(r'display/index.html', user_info=self.user, hots=await self.get_hots(redis))
+    """
+    搜索主页
+    """
 
     @auth_decorator
-    async def post(self):
+    async def get(self):
+        return await self.render(r'display/index.html', user_info=self.user,
+                                 hots=await self.get_hots(redis))
+
+
+class DisplayHandler(HotsHandler):
+    """
+    搜索结果
+    """
+
+    @auth_decorator
+    async def get(self, page=1):
         search = self.get_argument('search', '')
+        if not search:
+            return self.redirect(self.reverse_url(name='index'), permanent=False)
         await redis.zincrby('hot', 1, search)
+        res = await es.search(index='goods', body=json.dumps({
+            '_source': ['id', 'price', 'publisher', 'name', 'comment', 'inventory', 'edit_time'],
+            'query': {
+                'multi_match': {
+                    'query': search,
+                    'type': 'cross_fields',
+                    'operator': 'and',
+                    'fields': ['name', 'comment']
+                }
+            },
+            'from': (int(page) - 1) * 10,
+            'size': 10,
+            'highlight': {
+                "pre_tags": "<font color='#FF0000'>",
+                "post_tags": "</font>",
+                "fields": {
+                    "comment": {},
+                    'name': {}
+                }
+            }
+        }))
+        return await self.render(r'display\search_res.html',
+                                 hots=await self.get_hots(redis),
+                                 user_info=self.user,
+                                 res=[None if hit['_source'].update(hit['highlight']) else hit['_source'] for hit in
+                                      res['hits']['hits']])
 
 
 class SearchHandler(web.RequestHandler):
+    """
+    搜索建议提示
+    """
+
     async def post(self):
         arg = self.get_argument('text')
         rule = json.dumps({
@@ -26,15 +70,26 @@ class SearchHandler(web.RequestHandler):
                 "my_suggestions": {
                     "text": arg,
                     "completion": {
-                        "field": "nameSuggester",
+                        "field": self.get_argument('suggest'),
                         "size": 5,
                         "skip_duplicates": True
                     }
                 }
             }
         })
-        res = await es.search(body=rule, index='schoolshop')
+        res = await es.search(body=rule, index=self.get_argument('index'))
         search = []
         for item in res['suggest']['my_suggestions'][0]['options']:
             search.append(item['text'])
         return self.finish({'result': search})
+
+
+class GoodHandler(HotsHandler):
+    """
+    货物描述和购买
+    """
+
+    @auth_decorator
+    async def get(self, id):
+        good = await objects.get(Goods, id=id)
+        return self.render(r'display\good.html', user_info=self.user, hots=self.get_hots(), good=good)

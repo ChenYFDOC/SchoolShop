@@ -28,8 +28,8 @@
                 <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0 mr-5">
-            <input class="form-control mr-sm-2" type="search" id="header_search" aria-label="Search">
+        <form action="{{ reverse_url('display','1') }}" method="get" class="form-inline my-2 my-lg-0 mr-5">
+            <input class="form-control mr-sm-2" name="search" type="search" id="header_search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" fill="currentColor"
                      class="bi bi-search" viewBox="0 0 16 16">
@@ -37,18 +37,44 @@
                 </svg>
             </button>
         </form>
+        {% import random %}
         {% try %}
-        {% if user_info.header %}
-        <img title="个人中心" style="border-radius: 50%;width: 50px;height: 50px" src="
-            {{ reverse_url('media','header/'+user_info.header) }}
+        <div class="dropdown">
+            {% if user_info.header %}
+            <img class="img-thumbnail shadow mr-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                 id="header-menu" title="个人中心"
+                 src="
+            {{ reverse_url('media','header/'+user_info.header)+'?'+str(random.randint(0,100)) }}
             {% else %}
-            <img title=" 个人中心" style="border-radius: 50%;width: 50px;height: 50px" src="
-        {{ reverse_url('media','header/default_header.jpg') }}
-        {% end %}" alt="">
+            <img class=" img-thumbnail shadow mr-3" id="header-menu" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false" title="个人中心"
+            src="
+            {{ reverse_url('media','header/default_header.jpg') }}
+            {% end %}" alt="">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="header-menu">
+                <a class="dropdown-item" href="{{ reverse_url('profile') }}">个人中心</a>
+                <a class="dropdown-item" href="{{ reverse_url('logout') }}">注销</a>
+            </div>
+        </div>
+        <style>
+            #header-menu {
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                transition: background-color 0.5s linear, color 0.5s linear;
+            }
+
+            #header-menu:hover {
+                cursor: pointer;
+                background-color: #3dabff;
+                color: blue;
+            }
+        </style>
         {% except %}
         {% end %}
     </div>
 </nav>
+<script src="{{ static_url('js/jquery-ui.min.js') }}"></script>
 <script>
     let hots = Array();
     {% for hot in hots %}
@@ -75,4 +101,7 @@
         }, 5000)
     }
     set_hot(header_search)
+    let search_post = (data) => {
+        location.href = '{{ reverse_url("display","1") }}' + 'search=' + data
+    }
 </script>

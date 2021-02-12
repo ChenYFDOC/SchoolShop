@@ -133,7 +133,6 @@
 {% end %}
 {% block js %}
 <script src="{{ static_url('js/sweetalert.min.js') }}"></script>
-<script src="{{ static_url('js/jquery-ui.min.js') }}"></script>
 <script>
     $('.coder').on('click', function () {
         coder = $(this);
@@ -163,12 +162,15 @@
     college.on('input', function () {
         $.post('{{ reverse_url("search") }}', {
             "text": college.val(),
+            'index': 'schoolshop',
+            'suggest': 'nameSuggester'
         }, (data) => {
             college.autocomplete({
-                source: data.result
+                source: data.result,
             })
         })
     })
+    college.autocomplete()
     $('input').on('input', function () {
         $(this).removeClass('is-invalid')
     })

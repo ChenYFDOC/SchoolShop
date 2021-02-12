@@ -4,5 +4,7 @@ from .handlers import *
 url_match = [
     url(r'/?', RedirectHandler, ({'url': '/index/'})),
     url(r'/index/?', IndexHandler, name='index'),
-    url(r'/_search/?', SearchHandler, name='search')
+    url(r'/index/(\d*)/?', DisplayHandler, name='display'),
+    url(r'/_search/?', SearchHandler, name='search'),
+    url(r'/good/(\w*)/?', GoodHandler, name='good')
 ]

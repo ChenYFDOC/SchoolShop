@@ -1,0 +1,30 @@
+{% extends '..\commons\base.html' %}
+{% autoescape None %}
+{% block css %}
+<style>
+    body {
+        background-color: #c5c5c5;
+    }
+    ul.list-unstyled li:hover{
+        cursor: pointer;
+    }
+</style>
+{% end %}
+{% block body %}
+<div style="background-color:#eeeeee;height: 100%;padding-top: 66px" class="container">
+    <ul class="list-unstyled">
+        {% for good in res %}
+        <li class="media row justify-content-center">
+            <div class="media-body col-8">
+                <h5 class="mt-0 mb-1">{{ good['name'] if isinstance(good['name'],str) else good['name'] }}</h5>
+                <p>{{ good['comment'] if isinstance(good['comment'],str) else good['comment'][0] }}</p>
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+{% end %}
+{% block js %}
+<script>
+</script>
+{% end %}

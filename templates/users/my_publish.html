@@ -1,0 +1,295 @@
+<style>
+    #nav-home .row {
+        border-bottom: solid;
+        border-bottom-width: 1px;
+        border-bottom-color: #0022ff;
+    }
+</style>
+<nav class="mt-5">
+    <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
+        <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+           aria-controls="nav-home" aria-selected="true">已发布</a>
+        <a class="nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
+           aria-controls="nav-profile" aria-selected="false">交易中</a>
+        <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab"
+           aria-controls="nav-contact" aria-selected="false">交易记录</a>
+        <a class="btn btn-primary nav-link" data-toggle="tab" href="#nav-publish" role="tab" aria-selected="false"
+           id="nav-publish-tab" aria-controls="nav-publish"
+           style=";margin-left: 50%">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
+                 viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            发布
+        </a>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="container">
+            <div class="row mt-4">
+                <div class="col-7">商品</div>
+                <div class="col-3">价格</div>
+                <div class="col-2">编辑</div>
+            </div>
+
+            {% for good in goods %}
+            <div class="row mt-5">
+                <div class="media col-7">
+                    <img src="" class="mr-3">
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ good.name }}</h5>
+                        <p>{{ good.comment }}</p>
+                    </div>
+                </div>
+                <div class="col-3 align-self-center">￥{{ good.price }}</div>
+                <div class="col-2 align-self-center">
+                    <div onclick="edit_good('{{ good.id.hex }}')" class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                        </svg>
+                    </div>
+                    <div onclick="delete_good('{{ good.id.hex }}')" class="btn btn-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd"
+                                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            {% end %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <div class="container">
+            <div class="row mt-4">
+                <div class="col-7">商品</div>
+                <div class="col-3">价格</div>
+                <div class="col-2">编辑</div>
+            </div>
+
+            {% for good in goods_ing %}
+            <div class="row mt-5">
+                <div class="media col-7">
+                    <img src="" class="mr-3">
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ good.name }}</h5>
+                        <p>{{ good.comment }}</p>
+                    </div>
+                </div>
+                <div class="col-3 align-self-center">￥{{ good.price }}</div>
+                <div class="col-2 align-self-center">
+                    <div onclick="edit_good('{{ good.id.hex }}')" class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                        </svg>
+                    </div>
+                    <div onclick="delete_good('{{ good.id.hex }}')" class="btn btn-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd"
+                                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            {% end %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+        <div class="container">
+            <div class="row mt-4">
+                <div class="col-7">商品</div>
+                <div class="col-3">价格</div>
+                <div class="col-2">编辑</div>
+            </div>
+
+            {% for good in goods_end %}
+            <div class="row mt-5">
+                <div class="media col-7">
+                    <img src="" class="mr-3">
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ good.name }}</h5>
+                        <p>{{ good.comment }}</p>
+                    </div>
+                </div>
+                <div class="col-3 align-self-center">￥{{ good.price }}</div>
+                <div class="col-2 align-self-center">
+                    <div onclick="edit_good('{{ good.id.hex }}')" class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                        </svg>
+                    </div>
+                    <div onclick="delete_good('{{ good.id.hex }}')" class="btn btn-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd"
+                                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            {% end %}
+
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="nav-publish" role="tabpanel" aria-labelledby="nav-publish-tab">
+        <div class="container">
+            <form>
+                <input type="text" hidden id="good_id_input">
+                <div class="form-group">
+                    <label for="good_name">商品名称</label>
+                    <input type="text" class="form-control" id="good_name">
+                </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="good_price">价格（元）</label>
+                        <input style="color: red;font-weight: bold" type="number" class="form-control" id="good_price">
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="good_inventory">库存</label>
+                        <input placeholder="默认为1个" style="font-weight: bold" type="number" class="form-control"
+                               id="good_inventory">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="good_comment">商品注释</label>
+                    <textarea class="form-control" id="good_comment" rows="3"></textarea>
+                </div>
+            </form>
+            <div id="editor"></div>
+            <div id="submit_good" class="float-right btn btn-danger mt-4">上架商品</div>
+        </div>
+    </div>
+</div>
+<script src="{{ static_url('js/wangEditor.min.js') }}"></script>
+<script src="{{ static_url('js/sweetalert.min.js') }}"></script>
+
+<script>
+    let editor = new wangEditor('#editor')
+    editor.config.uploadImgServer = '{{ reverse_url("upload") }}'
+    editor.config.uploadVideoServer = '{{ reverse_url("upload") }}'
+    editor.config.uploadVideoMaxSize = 0.5 * 1024 * 1024 * 1024
+    editor.config.uploadVideoAccept = ['mp4']
+    editor.config.zIndex = 0
+    editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif', 'bmp']
+    editor.config.placeholder = '商品展示内容'
+    editor.create()
+</script>
+<script>
+    let good_name = $('#good_name')
+    let good_price = $('#good_price')
+    let good_inventory = $('#good_inventory')
+    let good_comment = $('#good_comment')
+    let submit_good = $('#submit_good')
+    let publish_div = $('#nav-publish')
+    let good_id_input = $('#good_id_input')
+    let publish_tab = $('#nav-publish-tab')
+    publish_tab.on('click', (e) => {
+        if (e.button === 0) {
+            good_name.val('')
+            good_price.val('')
+            good_inventory.val('')
+            good_comment.val('')
+            good_id_input.val('')
+            editor.txt.clear()
+        }
+    })
+    let response = (which, res) => {
+        which.removeClass('is-valid')
+        which.removeClass('is-invalid')
+        which.addClass('is-invalid')
+        which.parent().children('div.invalid-feedback').remove()
+        which.parent().append(`<div class="invalid-feedback">${res}</div>`)
+    }
+    publish_div.find('input,textarea').on('input', function (e) {
+        let this_ = $(this)
+        this_.removeClass('is-invalid')
+        this_.removeClass('is-valid')
+        this_.parent().children('div.invalid-feedback').remove()
+    })
+    submit_good.on('click', () => {
+        let good = new FormData()
+        good.append('name', good_name.val())
+        good.append('price', good_price.val())
+        good.append('inventory', good_inventory.val() === '' ? 1 : good_inventory.val())
+        good.append('comment', good_comment.val())
+        good.append('description', editor.txt.html())
+        good.append('good_id', good_id_input.val())
+        $.ajax('{{ reverse_url('add_good') }}', {
+            type: 'post',
+            contentType: false,
+            processData: false,
+            data: good,
+            success: (res) => {
+                if (res.status !== 200) {
+                    if (res.reason.price) {
+                        response(good_price, res.reason.price)
+                    }
+                    if (res.reason.name) {
+                        response(good_name, res.reason.name)
+                    }
+                    if (res.reason.comment) {
+                        response(good_comment, res.reason.comment)
+                    }
+                } else
+                    swal({
+                        text: "上架成功",
+                        icon: "success",
+                        button: "确定",
+                    }).then(() => {
+                        location.search = '?publish'
+                    })
+            }
+        })
+    })
+</script>
+<script>
+    let edit_good = (good_id) => {
+        $.ajax('{{ reverse_url('good_detail') }}', {
+            type: 'get',
+            data: {good_id},
+            success: (res) => {
+                if (res.status === 200) {
+                    good_name.val(res.good.name)
+                    good_price.val(res.good.price)
+                    good_inventory.val(res.good.inventory)
+                    good_comment.val(res.good.comment)
+                    editor.txt.clear()
+                    editor.txt.html(res.good.description)
+                    good_id_input.val(good_id)
+                    publish_tab.click()
+                }
+            }
+        })
+    }
+    let delete_good = (good_id) => {
+        $.ajax('{{ reverse_url('add_good') }}', {
+            type: 'delete',
+            data: {good_id},
+            success: (res) => {
+                if (res.status === 200 && res.count === 1)
+                    swal({
+                        text: "下架成功",
+                        icon: "success",
+                        button: "确定",
+                    }).then(() => {
+                        location.search = '?publish'
+                    })
+            }
+        })
+    }
+</script>
