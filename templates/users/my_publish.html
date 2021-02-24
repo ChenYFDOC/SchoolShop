@@ -229,7 +229,7 @@
         good.append('comment', good_comment.val())
         good.append('description', editor.txt.html())
         good.append('good_id', good_id_input.val())
-        $.ajax('{{ reverse_url('add_good') }}', {
+        $.ajax('{{ reverse_url("add_good") }}', {
             type: 'post',
             contentType: false,
             processData: false,
@@ -259,7 +259,7 @@
 </script>
 <script>
     let edit_good = (good_id) => {
-        $.ajax('{{ reverse_url('good_detail') }}', {
+        $.ajax('{{ reverse_url("good_detail") }}', {
             type: 'get',
             data: {good_id},
             success: (res) => {
@@ -277,7 +277,7 @@
         })
     }
     let delete_good = (good_id) => {
-        $.ajax('{{ reverse_url('add_good') }}', {
+        $.ajax('{{ reverse_url("add_good") }}', {
             type: 'delete',
             data: {good_id},
             success: (res) => {

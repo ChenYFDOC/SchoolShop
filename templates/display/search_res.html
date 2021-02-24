@@ -5,20 +5,41 @@
     body {
         background-color: #c5c5c5;
     }
-    ul.list-unstyled li:hover{
+
+    #display .row {
+        border-bottom: solid;
+        border-bottom-width: 1px;
+        border-bottom-color: #0022ff;
+    }
+
+    #display li {
+        padding: 20px;
+    }
+
+    ul.list-unstyled li .media-body:hover {
         cursor: pointer;
     }
 </style>
 {% end %}
 {% block body %}
-<div style="background-color:#eeeeee;height: 100%;padding-top: 66px" class="container">
+<div id="display" style="background-color:#eeeeee;height: 100%;padding-top: 66px" class="container">
+    <div class="row mt-4">
+        <div class="col-7">商品</div>
+        <div class="col-2">价格</div>
+        <div class="col-1">库存</div>
+        <div class="col-2">时间</div>
+    </div>
     <ul class="list-unstyled">
         {% for good in res %}
-        <li class="media row justify-content-center">
-            <div class="media-body col-8">
-                <h5 class="mt-0 mb-1">{{ good['name'] if isinstance(good['name'],str) else good['name'] }}</h5>
+        <li style="background-color: #f6f6f6" class="media row">
+            <div onclick="goodDetail('{{ good['id'] }}')" class="media-body col-7">
+                <h5 class="mt-0 mb-1">{{ good['name'] if isinstance(good['name'],str) else good['name'][0] }}</h5>
                 <p>{{ good['comment'] if isinstance(good['comment'],str) else good['comment'][0] }}</p>
             </div>
+            <div class="col-2 align-self-center"><span style="font-size: large;color: #FF0000; ">￥{{ good['price']
+                }}</span></div>
+            <div class="col-1 align-self-center">{{ good['inventory'] }}</div>
+            <div class="col-2 align-self-center">{{ good['edit_time'] }}</div>
         </li>
         {% end %}
     </ul>
@@ -26,5 +47,8 @@
 {% end %}
 {% block js %}
 <script>
+    let goodDetail = (good_id) => {
+        location.href = `/good/${good_id}`
+    }
 </script>
 {% end %}

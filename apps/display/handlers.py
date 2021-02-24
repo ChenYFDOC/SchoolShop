@@ -5,6 +5,7 @@ from servers import es, redis, objects
 from utils.authLog import auth_decorator
 from common_handler import HotsHandler
 from ..shop.models import Goods
+from apps.users.models import Users
 
 
 class IndexHandler(HotsHandler):
@@ -50,11 +51,13 @@ class DisplayHandler(HotsHandler):
                 }
             }
         }))
+        for hit in res['hits']['hits']:
+            hit['_source'].update(hit['highlight'])
+            hit['_source']['id'] = hit['_id']
         return await self.render(r'display\search_res.html',
                                  hots=await self.get_hots(redis),
                                  user_info=self.user,
-                                 res=[None if hit['_source'].update(hit['highlight']) else hit['_source'] for hit in
-                                      res['hits']['hits']])
+                                 res=[hit['_source'] for hit in res['hits']['hits']])
 
 
 class SearchHandler(web.RequestHandler):
@@ -86,10 +89,22 @@ class SearchHandler(web.RequestHandler):
 
 class GoodHandler(HotsHandler):
     """
-    货物描述和购买
+    货物描述和联系卖家
     """
 
     @auth_decorator
-    async def get(self, id):
-        good = await objects.get(Goods, id=id)
-        return self.render(r'display\good.html', user_info=self.user, hots=self.get_hots(), good=good)
+    async def get(self, _id):
+        good = await objects.get(Goods, id=_id)
+        publisher = await objects.get(Users, id=good.publisher_id)
+        return await self.render(r'display\good.html', user_info=self.user, hots=await self.get_hots(redis), good=good,
+                                 publisher=publisher)
+
+
+class BuyHandler(HotsHandler):
+    """
+    商品购买确认和状态
+    """
+
+    @auth_decorator
+    async def get(self, _id):
+        return await self.render(r'display\buy.html', user_info=self.user, hots=await self.get_hots(redis))
