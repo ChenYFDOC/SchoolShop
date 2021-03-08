@@ -7,5 +7,6 @@ url_match = [
     url(r'/index/(\d*)/?', DisplayHandler, name='display'),
     url(r'/_search/?', SearchHandler, name='search'),
     url(r'/good/(\w*)/?', GoodHandler, name='good'),
-    url(r'/good/(\w*)/buy/?', BuyHandler,name = 'buy')
+    url(r'/good/(\w*)/buy/?', BuyHandler, name='buy'),
+    url(r'/good/order/delete/?', BuyHandler, name='del_o')
 ]

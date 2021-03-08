@@ -91,3 +91,23 @@ class GoodDetailHandler(web.RequestHandler):
             return await self.finish({'status': 200,
                                       'good': {'name': good.name, 'price': good.price, 'inventory': good.inventory,
                                                'comment': good.comment, 'description': good.description}})
+
+
+class CompleteGood(web.RequestHandler):
+    """
+    完成交易
+    """
+
+    @auth_decorator
+    async def get(self):
+        order_id = self.get_argument('id')
+        try:
+            order = await objects.get(Order, id=order_id)
+        except Order.DoesNotExist:
+            return await self.finish({'code': 404})
+        if self.user.id != order.seller_id:
+            return await self.finish({'code': 403})
+        order.status = False
+        order.finish_time = datetime.now()
+        await objects.update(order, only=['status', 'finish_time'])
+        return await self.finish({'code': 200})

@@ -4,13 +4,14 @@ import re
 import hashlib
 import jwt
 import aiofiles
-from tornado import web
+from tornado import web, websocket
 from servers import coder, redis, objects
 from .models import *
 from .forms import *
 from settings import settings
 from utils.authLog import auth_decorator
 from common_handler import HotsHandler
+from apps.shop.models import Order, Goods
 
 
 class LoginHandler(HotsHandler):
@@ -130,15 +131,25 @@ class ProfileHandler(HotsHandler):
     @auth_decorator
     async def get(self):
         goods = await objects.execute(self.user.goods_set)
-        goods_ing = []
-        goods_end = []
-        for good in goods:
-            if good.status == 1:
-                goods_ing.append(good)
-            if good.status in (2, 3):
-                goods_end.append(good)
+        orders_buyer = await objects.prefetch(self.user.order_buyer, Goods.select())
+        order_ing = []
+        order_end = []
+        for order in orders_buyer:
+            if order.status:
+                order_ing.append(order)
+            else:
+                order_end.append(order)
+        orders_seller = await objects.prefetch(self.user.order_seller, Goods.select())
+        sell_ing = []
+        sell_end = []
+        for order in orders_seller:
+            if order.status:
+                sell_ing.append(order)
+            else:
+                sell_end.append(order)
         return await self.render(r'users/profile.html', user_info=self.user, hots=await self.get_hots(redis),
-                                 goods=goods, goods_ing=goods_ing, goods_end=goods_end)
+                                 goods=goods, goods_ing=order_ing, goods_end=order_end, sell_ing=sell_ing,
+                                 sell_end=sell_end)
 
     @auth_decorator
     async def patch(self):
@@ -196,3 +207,13 @@ class ProfileHandler(HotsHandler):
             return await self.finish({'status': 200})
         else:
             return await self.finish({'status': 400, 'reason': info_form.errors.popitem()[1][0]})
+
+
+class ChatWindowHandler(web.RequestHandler):
+    @auth_decorator
+    async def get(self):
+        return await self.render('users/chat.html')
+
+
+class ChatHandler(websocket.WebSocketHandler):
+    pass

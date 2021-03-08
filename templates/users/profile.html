@@ -7,6 +7,10 @@
     #list-tab a {
         background-color: #cccccc;
     }
+
+    .media:hover {
+        cursor: pointer;
+    }
 </style>
 {% end %}
 {% block body %}
@@ -25,10 +29,12 @@
             </div>
         </div>
         <div style="height: 100%;padding-top: 56px" class="tab-content col-10" id="nav-tabContent">
-            {#            添加 show active用来显示选中#}
+            {# 添加 show active用来显示选中#}
             <div class="tab-pane fade show active" id="list-cart" role="tabpanel" aria-labelledby="list-cart-list">
+                {% include 'buying.html' %}
             </div>
             <div class="tab-pane fade" id="list-record" role="tabpanel" aria-labelledby="list-record-list">
+                {% include 'buyed.html' %}
             </div>
             <div class="tab-pane fade" id="list-pub" role="tabpanel" aria-labelledby="list-pub-list">
                 {% include 'my_publish.html' %}
@@ -55,6 +61,9 @@
         default:
             $('#list-cart-list').click()
             break
+    }
+    let to_good = (id) => {
+        location.href = `/good/${id}/`
     }
 </script>
 {% end %}

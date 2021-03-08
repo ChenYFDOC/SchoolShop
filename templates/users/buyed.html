@@ -1,0 +1,22 @@
+<div id="display" style="height: 100%;padding-top: 66px" class="container">
+    <div style="border-bottom: solid;
+        border-bottom-width: 1px;
+        border-bottom-color: #0022ff;" class="row mt-4">
+        <div class="col-7">商品</div>
+        <div class="col-2">价格</div>
+        <div class="col-3">时间</div>
+    </div>
+    <ul class="list-unstyled">
+        {% for order in goods_end %}
+        <li style="background-color: #f6f6f6" class="media row">
+            <div onclick="to_good('{{order.good.id.hex}}')" class="media-body col-7 mt-3">
+                <h5 class="mt-0 mb-1">{{ order.good.name }}</h5>
+                <p>{{ order.good.comment }}</p>
+            </div>
+            <div class="col-2 align-self-center"><span style="font-size: large;color: #FF0000; ">￥{{ order.good.price
+                }}</span></div>
+            <div class="col-3 align-self-center">{{ order.good.edit_time }}</div>
+        </li>
+        {% end %}
+    </ul>
+</div>
