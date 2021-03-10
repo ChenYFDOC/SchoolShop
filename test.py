@@ -76,6 +76,6 @@
 #     user = ForeignKeyField(User, verbose_name="用户")
 #     post_comment = ForeignKeyField(PostComment, verbose_name="帖子")
 if __name__ == '__main__':
-    a={'a':2}
-    from tornado import web
-    print({**a})
+    from uuid import uuid4
+
+    print(len(uuid4().hex))

@@ -9,9 +9,10 @@ from servers import coder, redis, objects
 from .models import *
 from .forms import *
 from settings import settings
-from utils.authLog import auth_decorator
+from utils.authLog import auth_decorator, auth_ws
 from common_handler import HotsHandler
-from apps.shop.models import Order, Goods
+from apps.shop.models import Goods
+from collections import defaultdict
 
 
 class LoginHandler(HotsHandler):
@@ -209,11 +210,36 @@ class ProfileHandler(HotsHandler):
             return await self.finish({'status': 400, 'reason': info_form.errors.popitem()[1][0]})
 
 
+"""
+以下部分用于处理服务器推送和聊天
+"""
+
+
 class ChatWindowHandler(web.RequestHandler):
     @auth_decorator
     async def get(self):
-        return await self.render('users/chat.html')
+        try:
+            to = await objects.get(Users, id=self.get_argument('to'))
+        except Users.DoesNotExist:
+            return self.send_error(404)
+        return await self.render('users/chat.html', to=to)
 
 
 class ChatHandler(websocket.WebSocketHandler):
-    pass
+    pair = defaultdict(list)
+
+    @auth_ws
+    async def open(self, *args, **kwargs):
+        self.pair[self.user.id.hex].append(self)
+
+    @auth_ws
+    async def on_message(self, message):
+        to = self.get_argument('to')
+        if len(tos := self.pair[to]):
+            for ws in tos:
+                await ws.write_message(self.user.nick_name + '|' + self.user.id.hex + message)
+        else:
+            await self.write_message('400')
+
+    def on_close(self):
+        self.pair[self.user.id.hex].remove(self)

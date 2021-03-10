@@ -16,7 +16,7 @@ class Users(Model):
     phone = CharField(max_length=11)
     password = CharField()
     email = CharField(null=True)
-    nick_name = CharField(max_length=8, null=True)
+    nick_name = CharField(max_length=8, default='枫云用户')
     header = CharField(null=True)
     trading_address = CharField(null=True)
     college = ForeignKeyField(College, on_delete='cascade')

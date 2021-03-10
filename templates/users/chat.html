@@ -4,9 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>gggg</title>
+    <title>{{ to.nick_name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ static_url('css/jquery.convform.css') }}" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <style>
         button {
             font-family: 'Microsoft YaHei';
@@ -33,18 +34,19 @@
                                         <div class="wrapper-messages">
                                             <div class="spinLoader hidden"></div>
                                             <div id="messages" style="padding-bottom: 47px;">
-                                                <div class="message to ready">Hello! 这是一个不错的聊天窗口插件，带自动回复功能，要继续吗？</div>
                                             </div>
                                         </div>
                                         <form id="convForm" class="convFormDynamic">
                                             <div class="options dragscroll">
                                                 <div class="option">好的</div>
                                                 <div class="option">当然!</div>
+                                                <div class="option">说下交易地址吧</div>
                                             </div>
-                                            <textarea id="userInput" rows="1" placeholder="Type Here"
+                                            <textarea id="userInput" rows="1"
                                                       class="userInputDynamic"></textarea>
-                                            <button type="submit" class="submit">▶</button>
-                                            <span class="clear"></span></form>
+                                            <button type="button" class="submit">▶</button>
+                                            <span class="clear"></span>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +58,41 @@
     </div>
 </div>
 <script src="{{ static_url('js/jquery-3.5.1.min.js') }}"></script>
-<script src="{{ static_url('js/jquery.convform.js') }}"></script>
-<script src="{{ static_url('js/chat.js') }}"></script>
-<a href="http://www.bootstrapmb.com/" style="display:none">bootstrapmb</a></body>
+<script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script>
+    let ws = new WebSocket(`ws://${location.host}{{ reverse_url('chat_handler') }}` + location.search.split('?')[1])
+    let form = $('#convForm')
+    let content = form.find('#userInput')
+    let mes_div = $('#messages')
+    let opt = $('.dragscroll')
+    let button = form.find('button.submit')
+    opt.find('div.option').on('click', function () {
+        content.val($(this).text())
+        button.click()
+    })
+    button.on('click', () => {
+        let send_m = content.val()
+        if (send_m) {
+            ws.send(send_m)
+            mes_div.append(`<div class="message from">${send_m}</div>`)
+            content.val('')
+            mes_div.scrollTop(mes_div[0].scrollHeight - mes_div.height())
+        }
+    })
+    ws.onopen = () => {
+        ws.send('在的')
+    }
+    ws.onmessage = (res) => {
+        if (res.data === '400') {
+            toastr.options = {
+                positionClass: 'toast-top-left'
+            }
+            toastr.error('对方不在线！')
+        } else {
+            mes_div.append(`<div class="message to ready">${res.data.substring(res.data.lastIndexOf('|')+33)}</div>`)
+        }
+        mes_div.scrollTop(mes_div[0].scrollHeight - mes_div.height())
+    }
+</script>
+</body>
 </html>

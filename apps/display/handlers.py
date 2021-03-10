@@ -1,4 +1,5 @@
 import json
+import math
 
 from tornado import web
 from servers import es, redis, objects
@@ -26,7 +27,7 @@ class DisplayHandler(HotsHandler):
     """
 
     @auth_decorator
-    async def get(self, page=1):
+    async def get(self, page='1'):
         search = self.get_argument('search', '')
         if not search:
             return self.redirect(self.reverse_url(name='index'), permanent=False)
@@ -42,7 +43,7 @@ class DisplayHandler(HotsHandler):
                 }
             },
             'from': (int(page) - 1) * 10,
-            'size': 10,
+            'size': 7,
             'highlight': {
                 "pre_tags": "<font color='#FF0000'>",
                 "post_tags": "</font>",
@@ -58,7 +59,8 @@ class DisplayHandler(HotsHandler):
         return await self.render(r'display\search_res.html',
                                  hots=await self.get_hots(redis),
                                  user_info=self.user,
-                                 res=[hit['_source'] for hit in res['hits']['hits']])
+                                 res=[hit['_source'] for hit in res['hits']['hits']],
+                                 pages=math.ceil(res['hits']['total']['value'] / 7),cur_p=page)
 
 
 class SearchHandler(web.RequestHandler):

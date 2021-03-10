@@ -8,5 +8,6 @@ url_match = [
     url(r'/regist/phone_message/?', MessageHandler, name='phone_message'),
     url(r'/user_info/?', ProfileHandler, name='profile'),
     url(r'/logout/?', LogoutHandler, name='logout'),
-    url(r'/chat/?', ChatWindowHandler, name='chat')
+    url(r'/chat_window/?', ChatWindowHandler, name='chat'),
+    url(r'/chat/?', ChatHandler, name='chat_handler')
 ]

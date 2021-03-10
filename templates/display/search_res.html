@@ -43,12 +43,40 @@
         </li>
         {% end %}
     </ul>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination col-12">
+            {% if int(cur_p)!=1 %}
+            <li style="padding: 0" class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% end %}
+            {% for p in range(1,pages+1) %}
+            {% if abs(p-int(cur_p)) <= 4 %}
+            <li onclick="to_page('{{p}}')" style="padding: 0" class="page-item {% if int(cur_p)==p %}
+             active {% else %}{% end %}"><a class="page-link" href="#">{{p}}</a>
+            </li>
+            {% end %}
+            {% end %}
+            {% if int(cur_p)!=pages %}
+            <li style="padding: 0" class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% end %}
+        </ul>
+    </nav>
 </div>
 {% end %}
 {% block js %}
 <script>
     let goodDetail = (good_id) => {
         location.href = `/good/${good_id}/`
+    }
+    let to_page = (page) => {
+        location.href = `/index/` + page + `/` + location.search
     }
 </script>
 {% end %}
