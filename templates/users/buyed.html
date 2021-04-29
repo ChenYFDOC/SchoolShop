@@ -19,4 +19,20 @@
         </li>
         {% end %}
     </ul>
+    {% if cur_buyed[1] %}
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+            {{ cur_buyed[0] }}页
+        </button>
+        <div style="max-height: 200px;overflow: auto" class="dropdown-menu">
+            {% for p in range(cur_buyed[1]) %}
+            <a class="dropdown-item"
+               href="javascript:location.href=changeURLArg(location.href.replace('&purchase',''),'cur_buyed','{{ p+1 }}')+'&purchase'">{{
+                p+1
+                }}</a>
+            {% end %}
+        </div>
+    </div>
+    {% end %}
 </div>

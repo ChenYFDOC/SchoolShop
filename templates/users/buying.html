@@ -38,31 +38,21 @@
         </li>
         {% end %}
     </ul>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination col-12">
-            {% if int(cur_p_buying)!=1 %}
-            <li style="padding: 0" class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
+    {% if cur_buying[1] %}
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+            {{ cur_buying[0] }}页
+        </button>
+        <div style="max-height: 200px;overflow: auto" class="dropdown-menu">
+            {% for p in range(cur_buying[1]) %}
+            <a class="dropdown-item"
+               href="javascript:location.href=changeURLArg(location.href,'cur_buying','{{ p+1 }}')">{{ p+1
+                }}</a>
             {% end %}
-            {% for p in range(1,pages_buying+1) %}
-            {% if abs(p-int(cur_p_buying)) <= 4 %}
-            <li onclick="to_page('{{p}}')" style="padding: 0" class="page-item {% if int(cur_p)==p %}
-             active {% else %}{% end %}"><a class="page-link" href="#">{{p}}</a>
-            </li>
-            {% end %}
-            {% end %}
-            {% if int(cur_p_buying)!=pages_buying %}
-            <li style="padding: 0" class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% end %}
-        </ul>
-    </nav>
+        </div>
+    </div>
+    {% end %}
 </div>
 <script>
     let del_order = (_id) => {

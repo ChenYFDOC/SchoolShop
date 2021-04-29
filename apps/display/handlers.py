@@ -7,7 +7,9 @@ from utils.authLog import auth_decorator
 from common_handler import HotsHandler
 from ..shop.models import Goods, Order
 from apps.users.models import Users
-import peewee
+
+
+# import peewee
 
 
 class IndexHandler(HotsHandler):
@@ -60,7 +62,7 @@ class DisplayHandler(HotsHandler):
                                  hots=await self.get_hots(redis),
                                  user_info=self.user,
                                  res=[hit['_source'] for hit in res['hits']['hits']],
-                                 pages=math.ceil(res['hits']['total']['value'] / 7),cur_p=page)
+                                 pages=math.ceil(res['hits']['total']['value'] / 7), cur_p=page)
 
 
 class SearchHandler(web.RequestHandler):

@@ -48,20 +48,20 @@
 {% end %}
 {% block js %}
 <script>
-    switch (location.search) {
-        case '?purchase':
-            $('#list-record-list').click()
-            break
-        case '?publish':
-            $('#list-pub-list').click()
-            break
-        case 'user_info':
-            $('#list-profile-list').click()
-            break
-        default:
-            $('#list-cart-list').click()
-            break
-    }
+    if (location.search.endsWith('purchase'))
+        $('#list-record-list').click()
+    else if (location.search.endsWith('publish')) {
+        $('#list-pub-list').click()
+        if (location.search.endsWith('1publish'))
+            $('#nav-home-tab').click()
+        else if (location.search.endsWith('2publish'))
+            $('#nav-profile-tab').click()
+        else if (location.search.endsWith('3publish'))
+            $('#nav-contact-tab').click()
+    } else if (location.search.endsWith('user_info'))
+        $('#list-profile-list').click()
+    else
+        $('#list-cart-list').click()
     let to_good = (id) => {
         location.href = `/good/${id}/`
     }

@@ -1,4 +1,5 @@
 import datetime
+import math
 import random
 import re
 import hashlib
@@ -131,6 +132,11 @@ class ProfileHandler(HotsHandler):
 
     @auth_decorator
     async def get(self):
+        goods_page = int(self.get_argument('cur_goods', '1'))
+        selling_page = int(self.get_argument('cur_selling', '1'))
+        selled_page = int(self.get_argument('cur_selled', '1'))
+        buying_page = int(self.get_argument('cur_buying', '1'))
+        buyed_page = int(self.get_argument('cur_buyed', '1'))
         goods = await objects.execute(self.user.goods_set)
         orders_buyer = await objects.prefetch(self.user.order_buyer, Goods.select())
         order_ing = []
@@ -149,8 +155,16 @@ class ProfileHandler(HotsHandler):
             else:
                 sell_end.append(order)
         return await self.render(r'users/profile.html', user_info=self.user, hots=await self.get_hots(redis),
-                                 goods=goods, goods_ing=order_ing, goods_end=order_end, sell_ing=sell_ing,
-                                 sell_end=sell_end)
+                                 goods=goods[(n := (goods_page - 1) * 5):n + 5],
+                                 goods_ing=order_ing[(n := (buying_page - 1) * 5):n + 5],
+                                 goods_end=order_end[(n := (buyed_page - 1) * 5):n + 5],
+                                 sell_ing=sell_ing[(n := (selling_page - 1) * 5):n + 5],
+                                 sell_end=sell_end[(n := (selled_page - 1) * 5):n + 5],
+                                 cur_buying=(buying_page, math.ceil(len(order_ing) / 5)),
+                                 cur_buyed=(buyed_page, math.ceil(len(order_end) / 5)),
+                                 cur_selling=(selling_page, math.ceil(len(sell_ing) / 5)),
+                                 cur_selled=(selled_page, math.ceil(len(sell_end) / 5)),
+                                 cur_goods=(goods_page, math.ceil(len(goods) / 5)))
 
     @auth_decorator
     async def patch(self):
@@ -226,7 +240,7 @@ class ChatWindowHandler(web.RequestHandler):
 
 
 class ChatHandler(websocket.WebSocketHandler):
-    pair = defaultdict(list)
+    pair = defaultdict(list)  # id和handler列表组成的字典
 
     @auth_ws
     async def open(self, *args, **kwargs):
@@ -242,4 +256,7 @@ class ChatHandler(websocket.WebSocketHandler):
             await self.write_message('400')
 
     def on_close(self):
-        self.pair[self.user.id.hex].remove(self)
+        try:
+            self.pair[self.user.id.hex].remove(self)
+        except:
+            pass

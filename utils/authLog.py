@@ -3,6 +3,7 @@ import datetime
 from settings import settings
 from servers import objects
 from apps.users.models import Users
+from tornado.websocket import WebSocketHandler
 
 
 def auth_decorator(func):
@@ -44,8 +45,10 @@ def auth_ws(func):
             user = await objects.get(Users, id=user_info['user'])
             self.user = user
         except:
+            if isinstance(self, WebSocketHandler):
+                return self.close()
             self.set_status(404)
-            return await self.finish()
+            return await self.finish({'code': 404})
 
         return await func(self, *args, **kwargs)
 

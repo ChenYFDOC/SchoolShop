@@ -64,6 +64,23 @@
                 </div>
             </div>
             {% end %}
+            {% if cur_goods[1] %}
+            <div class="btn-group dropup mt-5">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    {{ cur_goods[0] }}页
+                </button>
+                <div style="max-height: 200px;overflow: auto" class="dropdown-menu">
+                    {% for p in range(cur_goods[1]) %}
+                    <a class="dropdown-item"
+                       href="javascript:location.href=changeURLArg(location.href.replace('&1publish',''),'cur_goods','{{ p+1 }}')+'&1publish'">{{
+                        p+1
+                        }}</a>
+                    {% end %}
+                </div>
+            </div>
+            {% end %}
         </div>
     </div>
 
@@ -106,7 +123,23 @@
                 </div>
             </div>
             {% end %}
-
+            {% if cur_selling[1] %}
+            <div class="btn-group dropup mt-5">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    {{ cur_selling[0] }}页
+                </button>
+                <div style="max-height: 200px;overflow: auto" class="dropdown-menu">
+                    {% for p in range(cur_selling[1]) %}
+                    <a class="dropdown-item"
+                       href="javascript:location.href=changeURLArg(location.href.replace('&2publish',''),'cur_selling','{{ p+1 }}')+'&2publish'">{{
+                        p+1
+                        }}</a>
+                    {% end %}
+                </div>
+            </div>
+            {% end %}
         </div>
     </div>
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
@@ -132,7 +165,23 @@
                 </div>
             </div>
             {% end %}
-
+            {% if cur_selled[1] %}
+            <div class="btn-group dropup mt-5">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    {{ cur_selled[0] }}页
+                </button>
+                <div style="max-height: 200px;overflow: auto" class="dropdown-menu">
+                    {% for p in range(cur_selled[1]) %}
+                    <a class="dropdown-item"
+                       href="javascript:location.href=changeURLArg(location.href.replace('&3publish',''),'selled_page','{{ p+1 }}')+'&3publish'">{{
+                        p+1
+                        }}</a>
+                    {% end %}
+                </div>
+            </div>
+            {% end %}
         </div>
     </div>
 
@@ -305,5 +354,21 @@
                 })
             }
         })
+    }
+
+    function changeURLArg(url, arg, arg_val) {
+        const pattern = arg + '=([^&]*)';
+        const replaceText = arg + '=' + arg_val;
+        if (url.match(pattern)) {
+            let tmp = '/(' + arg + '=)([^&]*)/gi';
+            tmp = url.replace(eval(tmp), replaceText);
+            return tmp;
+        } else {
+            if (url.match('[\?]')) {
+                return url + '&' + replaceText;
+            } else {
+                return url + '?' + replaceText;
+            }
+        }
     }
 </script>
