@@ -1,4 +1,5 @@
 import datetime
+import json
 import math
 import random
 import re
@@ -14,6 +15,7 @@ from utils.authLog import auth_decorator, auth_ws
 from common_handler import HotsHandler
 from apps.shop.models import Goods
 from collections import defaultdict
+from tornado.httpclient import AsyncHTTPClient
 
 
 class LoginHandler(HotsHandler):
@@ -107,8 +109,19 @@ class MessageHandler(web.RequestHandler):
             except Users.DoesNotExist:
                 randnum = random.randint(10000, 99999)
                 await redis.set(phone, randnum, expire=120)
-                # TODO 发送短信
-                return await self.finish({'status': 200})
+                fetch_body = {
+                    'apiKey': settings['apikey'],
+                    'phoneNum': phone,
+                    'templateID': 10634,
+                    'params': f'[f{randnum}]'
+                }
+                send_response = await AsyncHTTPClient().fetch('https://api.apishop.net/communication/sms/send',
+                                                              method='post',
+                                                              body=json.dumps(fetch_body))
+                if json.loads(send_response.body.decode())['desc'] == '请求成功':
+                    return await self.finish({'status': 200})
+                else:
+                    return await self.finish({'status': 502})
             else:
                 return await self.finish({'status': 403})
         else:

@@ -20,5 +20,6 @@ settings = {
     },
     'es': {
         'host': '192.168.61.128'
-    }
+    },
+    'apikey': os.getenv('apikey')
 }
