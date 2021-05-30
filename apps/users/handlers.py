@@ -16,6 +16,7 @@ from common_handler import HotsHandler
 from apps.shop.models import Goods
 from collections import defaultdict
 from tornado.httpclient import AsyncHTTPClient
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 
 class LoginHandler(HotsHandler):
@@ -68,7 +69,10 @@ class RegistHandler(web.RequestHandler):
     async def post(self):
         regform = RegistForm(self.request.arguments)
         if regform.validate():
-            id_code = (await redis.get(regform.phone.data)).decode()
+            try:
+                id_code = (await redis.get(regform.phone.data)).decode()
+            except:
+                return await self.finish({'status': 401, 'reason': {'phone_code': '验证码已过期，请重试！'}})
             if id_code == regform.phone_code.data:
                 try:
                     college = await objects.get(College, College.name == regform.college.data)
@@ -112,12 +116,15 @@ class MessageHandler(web.RequestHandler):
                 fetch_body = {
                     'apiKey': settings['apikey'],
                     'phoneNum': phone,
-                    'templateID': 10634,
-                    'params': f'[f{randnum}]'
+                    'templateID': '10634',
+                    'params': f'[{randnum}]'
                 }
-                send_response = await AsyncHTTPClient().fetch('https://api.apishop.net/communication/sms/send',
-                                                              method='post',
-                                                              body=json.dumps(fetch_body))
+                body = MultipartEncoder(fields=fetch_body, boundary='wL36Yn8afVp8Ag7AmP8qZ0SA4n1v9T').to_string()
+                send_response = await AsyncHTTPClient().fetch("https://api.apishop.net/communication/sms/send",
+                                                              headers={
+                                                                  'Content-Type': 'multipart/form-data; boundary=wL36Yn8afVp8Ag7AmP8qZ0SA4n1v9T'},
+                                                              method='POST',
+                                                              body=body)
                 if json.loads(send_response.body.decode())['desc'] == '请求成功':
                     return await self.finish({'status': 200})
                 else:
@@ -189,10 +196,10 @@ class ProfileHandler(HotsHandler):
         if change_form.validate():
             try:
                 user = await objects.get(Users, phone=change_form.o_phone.data,
-                                         password=(md5_code := hashlib.md5(
-                                             change_form.o_password.data.encode()).hexdigest()))
+                                         password=hashlib.md5(
+                                             change_form.o_password.data.encode()).hexdigest())
                 user.phone = change_form.n_phone.data
-                user.password = md5_code
+                user.password = hashlib.md5(change_form.n_password.data.encode()).hexdigest()
                 await objects.update(user, only=('phone', 'password'))
                 self.clear_cookie('jwt')
                 return await self.finish({'status': 200})
